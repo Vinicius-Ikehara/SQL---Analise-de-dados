@@ -1,0 +1,133 @@
+-- COMANDO SELECT
+-- (Exemplo 1) Seleção de uma coluna de uma tabela
+-- Liste os e-mails dos clientes da tabela sales.customers
+
+SELECT email
+FROM sales.customers
+
+-- (Exemplo 2) Seleção de mais de uma coluna de uma tabela
+-- Liste os emails e nomes dos clientes da tabela sales.customers
+
+SELECT email, first_name, last_name
+FROM sales.customers
+
+-- (Exemplo 3) Seleção de todas as colunas de uma tabela
+-- Liste todos as informações dos clientes da tabela sales.customers
+
+SELECT *
+FROM sales.customers
+
+-- COMANDO DISTINCT
+-- (Exemplo 1) Seleção de uma coluna sem DISTINCT
+-- Liste as marcas de carro que constam na tabela products
+SELECT brand
+FROM sales.products -- 333
+
+-- (Exemplo 2) Seleção de uma coluna com DISTINCT
+-- Liste as marcas de carro distintas que constam na tabela products
+SELECT DISTINCT brand
+FROM sales.products -- 40
+
+-- (Exemplo 3) Seleção de mais de uma coluna com DISTINCT
+-- Liste as marcas e anos de modelo distintos que constam na tabela products
+SELECT DISTINCT brand, model_year
+FROM sales.products -- 184
+
+-- (1) Comando usado para remover linhas duplicadas e mostrar apenas linhas distintas
+-- (2) Muito utilizado na etapa de exploração dos dados
+-- (3) Caso mais de uma coluna seja selecionada, o comando SELECT DISTINCT irá 
+-- retornar todas as combinações distintas.
+
+-- COMANDO WHERE
+-- (Exemplo 1) Filtro com condição única
+-- Liste os emails dos clientes da nossa base que moram no estado de Santa Catarina
+SELECT email
+FROM sales.customers
+WHERE state = 'SC'
+
+-- (Exemplo 2) Filtro com mais de uma condição
+-- Liste os emails dos clientes da nossa base que moram no estado de Santa Catarina
+-- ou Mato Grosso do Sul
+SELECT email, state
+FROM sales.customers
+WHERE state ='SC' OR state = 'MS'
+
+-- (Exemplo 3) Filtro de condição com data
+-- Liste os emails dos clientes da nossa base que moram no estado de Santa Catarina 
+-- ou Mato Grosso do Sul e que tem mais de 30 anos
+SELECT email, state, birth_date
+FROM sales.customers
+WHERE (state ='SC' OR state = 'MS') AND birth_date < '1996-12-26'
+
+-- RESUMO ##########################################################################
+-- (1) Comando utilizado para filtrar linhas de acordo com uma condição
+-- (2) No PostgreSQL são utilizadas aspas simples para delimitar strings 
+-- (3) string = sequência de caracteres = texto
+-- (4) Pode-se combinar mais de uma condição utilizando os operadores lógicos
+-- (5) No PostgreSQL as datas são escritas no formato 'YYYY-MM-DD' ou 'YYYYMMDD'
+
+-- COMANDO ORDER BY 
+
+-- (Exemplo 1) Ordenação de valores numéricos
+-- Liste produtos da tabela products na ordem crescente com base no preço
+SELECT *
+FROM sales.products
+ORDER BY price desc
+
+-- (Exemplo 2) Ordenação de texto
+-- Liste os estados distintos da tabela customers na ordem crescente
+SELECT DISTINCT state
+FROM sales.customers
+ORDER BY state
+
+-- RESUMO ##########################################################################
+-- (1) Comando utilizado para ordenar a seleção de acordo com uma regra definida
+-- (2) Por padrão o comando ordena na ordem crescente. Para mudar para a ordem 
+-- decrescente usar o comando DESC
+-- (3) No caso de strings a ordenação será seguirá a ordem alfabetica
+
+-- COMANDO LIMIT
+-- (Exemplo 1) Seleção das N primeiras linhas usando LIMIT
+-- Liste as 10 primeiras linhas da tabela funnel utilizando o LIMIT
+SELECT *
+FROM sales.funnel 
+LIMIT 10
+
+-- (Exemplo 2) Seleção das N primeiras linhas usando LIMIT e ORDER BY
+-- Liste os 10 produtos mais caros da tabela products com o comando LIMIT
+SELECT *
+FROM sales.products 
+ORDER BY price desc
+LIMIT 10
+
+-- RESUMO ##########################################################################
+-- (1) Comando utilizado para limitar o nº de linhas da consulta.
+-- (2) Muito utilizado na etapa de exploração dos dados
+-- (3) Muito utilizado em conjunto com o comando ORDER BY quando o que importa são
+-- os TOP N. Ex: "N pagamentos mais recentes", "N produtos mais caros"
+
+-- DESAFIO
+
+-- (Exercício 1) Selecione os nomes de cidade distintas que existem no estado de
+-- Minas Gerais em ordem alfabética (dados da tabela sales.customers)
+SELECT DISTINCT city
+FROM sales.customers
+WHERE state = 'MG'
+ORDER BY city
+
+
+-- (Exercício 2) Selecione o visit_id das 10 compras mais recentes efetuadas
+-- (dados da tabela sales.funnel)
+SELECT visit_id
+FROM sales.funnel
+WHERE paid_date IS NOT NULL
+ORDER BY paid_date
+LIMIT 10
+
+-- (Exercício 3) Selecione todos os dados dos 10 clientes com maior score nascidos
+-- após 01/01/2000 (dados da tabela sales.customers)
+SELECT *
+FROM sales.customers
+WHERE birth_date > '2000-01-01'
+ORDER BY score DESC
+LIMIT 10
