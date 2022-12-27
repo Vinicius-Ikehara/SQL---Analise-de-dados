@@ -1,0 +1,4 @@
+SELECT t1.roll_number, t1.name
+FROM student_information AS t1 LEFT JOIN examination_marks as t2 
+ON t1.roll_number = t2.roll_number
+WHERE (t2.subject_one + t2.subject_two + t2.subject_three) < 100; 
